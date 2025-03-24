@@ -57,3 +57,14 @@ span {
 .null {
     font-weight: 900;
 }
+
+@media (max-width: 768px) {
+    h1 {
+        font-size: 2rem;
+    }
+    .one{
+        font-size: 20px;
+    }
+    
+}
+
