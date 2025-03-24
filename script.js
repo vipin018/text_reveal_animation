@@ -1,13 +1,15 @@
-const letter = new SplitType('.section h1', { types: 'chars' });
-const oneSpan = document.querySelector('.distracting');
+gsap.registerPlugin(ScrollTrigger);
 
-oneSpan.innerHTML += `<span class="one">1</span>`;
-gsap.from(letter.chars, {
-    yPercent: -20,
-    willChange: 'transform',
-    ease: 'power2.inOut',
-    opacity: 0,
-    stagger: 0.05,
+// Initialize SplitType
+const letter = new SplitType('.section h1', { types: 'chars' });
+
+// Ensure element exists
+const oneSpan = document.querySelector('.distracting');
+if (oneSpan) {
+    oneSpan.innerHTML += `<span class="one">🥲</span>`;
+}
+
+const tl = gsap.timeline({
     scrollTrigger: {
         trigger: '.section',
         scroller: 'body',
@@ -15,25 +17,37 @@ gsap.from(letter.chars, {
         pin: true,
         markers: true,
     },
+});
 
+// Animation timeline
+tl.from('.section h1 .char', {
+    xPercent: -20,
+    willChange: 'transform',
+    ease: 'power2.inOut',
+    opacity: 0,
+    stagger: 0.05,
 })
+    .to('.distracting', {
+        color: 'rgb(255, 0, 0)',
+    })
+    .to('.one', {
+        keyframes: {
+            yPercent: [0, -50, 0],
+            opacity: [0, 1, 1],
+        }
+    })
 
-function soothScroll() {
-    // Initialize a new Lenis instance for smooth scrolling
+// Smooth scroll using Lenis
+function smoothScroll() {
     const lenis = new Lenis();
 
-    // Synchronize Lenis scrolling with GSAP's ScrollTrigger plugin
     lenis.on('scroll', ScrollTrigger.update);
 
-    // Add Lenis's requestAnimationFrame (raf) method to GSAP's ticker
-    // This ensures Lenis's smooth scroll animation updates on each GSAP tick
     gsap.ticker.add((time) => {
-        lenis.raf(time * 1000); // Convert time from seconds to milliseconds
+        lenis.raf(time * 1000);
     });
 
-    // Disable lag smoothing in GSAP to prevent any delay in scroll animations
     gsap.ticker.lagSmoothing(0);
-
 }
 
-soothScroll();
+smoothScroll();
